@@ -106,8 +106,8 @@ bank1 unsigned char i2c_rcv_buf[I2C_RCV_PKT_SIZE+1];   	//Buffer holding I2C rec
 bank1 unsigned char i2c_xmt_buf[I2C_XMT_PKT_SIZE+1];	//BUffer holding I2C data to transmit
 
 //----------------- Encrypted Reception buffer -----------------------
-unsigned char			Buffer[22];		// Decryption Work Buffer 
-bank1 unsigned char 		RX_Buffer[22];	// RF Receive buffer 
+unsigned char			Buffer[15];		// Decryption Work Buffer 
+bank1 unsigned char 		RX_Buffer[15];	// RF Receive buffer 
 
 unsigned char 			SEED[4];			// seed value = serial number
 unsigned int  			NextHop;     		// resync value for 2 Chance
