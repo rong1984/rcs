@@ -133,7 +133,6 @@ void 	tmr1_isr(void);				// Timer 1 for general timing
 void main ()
 {
 	char i;
-	char j;
 	Init_886();									// Initialize device specific registers
 
 	for (i=0; i< 5; i++ )      						// Flash LED to indicate firmware startup
