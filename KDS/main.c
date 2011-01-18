@@ -2,7 +2,7 @@
 //							 Software License Agreement
 //
 // The software supplied herewith by Microchip Technology Incorporated 
-// (the "Company") for its PICmicro® Microcontroller is intended and 
+// (the "Company") for its PICmicro?Microcontroller is intended and 
 // supplied to you, the Company’s customer, for use solely and 
 // exclusively on Microchip PICmicro Microcontroller products. The 
 // software is owned by the Company and/or its supplier, and is 
@@ -96,9 +96,9 @@ bit 	FHopOK;     	// Hopping code verified OK
 bit 	FSame;      	// Same code as previous
 bit 	FLearn;     	// Learn mode active
 bit 	F2Chance;   	// Resync required
-bit 	RFFull;         	// Buffer full
-bit 	RFBit;          	// Sampled RF signal
-bit 	RFsynch;		// Incoming trasnmission Synch level detect flag
+volatile bit 	RFFull;         	// Buffer full
+volatile bit 	RFBit;          	// Sampled RF signal
+volatile bit 	RFsynch;		// Incoming trasnmission Synch level detect flag
 
 //----------------- I2C buffer variables -------------------------------
 bank1 extern char     i2c_rcv_avail;           				// Flag if receive data is available 
