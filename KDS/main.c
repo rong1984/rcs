@@ -44,12 +44,8 @@
 #include "KeyGen.h"
 #include "KeeLoqAlg.h"
 #include "Table.h"
-#include "i2c.h"
-
 
 __CONFIG(CP & CPD & WDTDIS & INTIO & MCLREN & FCMDIS & PWRTDIS & LVPDIS);
-
-
 
 //---------------------------------------------------------------------
 // I/O definitions for PIC16F886
@@ -99,11 +95,6 @@ bit 	F2Chance;   	// Resync required
 volatile bit 	RFFull;         	// Buffer full
 volatile bit 	RFBit;          	// Sampled RF signal
 volatile bit 	RFsynch;		// Incoming trasnmission Synch level detect flag
-
-//----------------- I2C buffer variables -------------------------------
-bank1 extern char     i2c_rcv_avail;           				// Flag if receive data is available 
-bank1 unsigned char i2c_rcv_buf[I2C_RCV_PKT_SIZE+1];   	//Buffer holding I2C received data
-bank1 unsigned char i2c_xmt_buf[I2C_XMT_PKT_SIZE+1];	//BUffer holding I2C data to transmit
 
 //----------------- Encrypted Reception buffer -----------------------
 unsigned char			Buffer[15];		// Decryption Work Buffer 
