@@ -63,7 +63,7 @@
 	processor P16F636
 	#include P16F636.INC
 	#define ROMend 0x7FF
-	#include KLQ_eeprom.inc
+	#include TX_eeprom.inc
 
 	__CONFIG _MCLRE_OFF & _INTRC_OSC_NOCLKOUT & _WDT_OFF & _WUREN_ON & _CP_ON & _CPD_ON
 
