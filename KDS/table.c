@@ -2,7 +2,7 @@
 //							 Software License Agreement
 //
 // The software supplied herewith by Microchip Technology Incorporated 
-// (the "Company") for its PICmicro® Microcontroller is intended and 
+// (the "Company") for its PICmicro?Microcontroller is intended and 
 // supplied to you, the Company’s customer, for use solely and 
 // exclusively on Microchip PICmicro Microcontroller products. The 
 // software is owned by the Company and/or its supplier, and is 
@@ -290,7 +290,7 @@ unsigned char HopUpdate(void)
 //--------------------------------------------------------------------
 unsigned char ClearMem(void)
 {
-    char i;
+//    char i;
     for (Ind=0; Ind < (EL_SIZE * MAX_USER); Ind+=EL_SIZE)
     {
         Dato = 0xffff;
