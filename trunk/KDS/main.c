@@ -168,10 +168,6 @@ void main ()
  
 
     	InitReceiver();             							// Enable and init the receiver state machine	
-    	i2c_init();										// Enable I2C interface
-
-	for (j=0;j<I2C_XMT_PKT_SIZE; j++)   			// Clear I2C xmt buffer
-	 	i2c_xmt_buf[j] = 0;	
 
     	INTCON = 0x60;								// Enable PEIE and T0IE
 	GIE = 1;										// Enable Global Interrupts
@@ -203,93 +199,6 @@ void main ()
 	    		}
 
 			//****************************************
-			// Incoming I2C message
-			//  ***************************************
-			if(i2c_rcv_avail)			// Do we have an I2C transmission waiting?
-			{						// If so then we act accordingly...
-				i2c_rcv_avail = 0;
-				switch(i2c_rcv_buf[0])  // The first byte indicates the command to perform
-					{
-					case (0x01):					// This is test buffer: takes the received information
-						lcd_clear();				// and displays it on the LCD for comm testing.
-   						lcd_goto(LCD_LINE_1);
-   						lcd_puts("Test Buffer ");
- 						DelayUs(200);
-						lcd_goto(LCD_LINE_2);
-						for (i=1;i<5;i++)
-   						lcd_put_char(i2c_rcv_buf[i]);
-					break;
- 					
-					case (0x02):					// This command turns on the requested LEDS
-						 if (i2c_rcv_buf[1] & 0x01)	// The buffer contains which LEDS to turn on.
-							LED_DS1 = ON;
-						 else
-							LED_DS1 = OFF;
-						 if (i2c_rcv_buf[1] & 0x02)  
-							LED_DS2 = ON;
-						 else
-							LED_DS2 = OFF;
-						 if (i2c_rcv_buf[1] & 0x04)
-							LED_DS3 = ON;
-						 else
-							LED_DS3 = OFF;
-						 if (i2c_rcv_buf[1] & 0x08)
-							LED_DS4 = ON;
-						 else
-							LED_DS4 = OFF;
-						 if (i2c_rcv_buf[1] == 0xFF)	// All LEDs off	
-						{
-							LED_DS1 = OFF;
-							LED_DS2 = OFF;
-							LED_DS3 = OFF;
-							LED_DS4 = OFF;
-						}	
-					break;
-	
-					case (0x03):					// Future use: for transponder data to be transmitted
-						// TX Buffer 
-						// For FSK transponder application
-					break;
-
-					case (0x04):					// Transmitter Command
-						if (i2c_rcv_buf[1] & 0x01)    	// command 01= learn, 02=Erase All			
-						  {						// Activate Learn
-							FLearn = TRUE;
-							CTLearn = 255;
-							LED_DS4 = ON;
-							i2c_xmt_buf[0] = 0x01;				// Learn successful
-							for (j=1;j<I2C_XMT_PKT_SIZE; j++)   // Set status bits to transmit via I2C
-								i2c_xmt_buf[j] = 0x00;	
-						  } 
-						 else	
-						   if (i2c_rcv_buf[1] & 0x02)    			// Erase transmitters
-						    {
-							ClearMem();						// Erase all transmitters
-							LED_DS1 = OFF;
-							i2c_xmt_buf[0] = 0x02;				// Erase all successful
-							for (j=1;j<I2C_XMT_PKT_SIZE; j++)   // Set status bits to transmit via I2C
-								i2c_xmt_buf[j] = 0x00;				
-						    } 	
-					break;
-	
-					case (0x05):
-						// For future use
-					break;
-
-					case (0x06):
-						// For future use
-					break;
-		
-					case (0x07):
-						// For future use
-					break;
-
-					default:
-					break;
-					} //switch
-			}//if(i2c_rcv_avail)
-
-			//****************************************
 			// Learn Button Poll: every 64ms
 			// Based on Timer1
 			//  ***************************************
@@ -308,9 +217,6 @@ void main ()
 	                	while( !Learn);    		 	// wait for button release
 	                	Led = ON;           				// signal Led on
 	                	ClearMem();        			// erase all command!
-   			  	i2c_xmt_buf[0] = 0x02;		// This is the status byte 02==>Erase successful
-   			  	for(i=1;i<10;i++)
-	                     i2c_xmt_buf[0] = 0;
   
 	                	COut = TOUT;        		// single lomg flash pulse time /timer will switch off Led
 	                	CLearn = 0;         			// reset learn debounce
@@ -479,14 +385,6 @@ void Remote(void)
 
     	if (DecCHK() == FALSE)             		// Check if Decription failed
 	{
-
-		i2c_xmt_buf[0] = 0x07;	 		// Learn failed flag to I2C buffer
-		for (k=4;k>0; k--)   			// Set status bits to transmit via I2C
-	 		i2c_xmt_buf[(5-k)] = 0;	
-
-		for (k=4;k>0; k--)   			// Set status bits to transmit via I2C
-	 		i2c_xmt_buf[(9-k)] = 0;
-	
 	      	lcd_clear();					// Display "Invalid Transmitter" message
 	   	lcd_goto(LCD_LINE_1);			// on LCD
 	   	lcd_puts("Not a Valid ");   
@@ -518,13 +416,7 @@ void Remote(void)
     	{		
 
         	if ( Find()== FALSE)
-		{
-
-			i2c_xmt_buf[0] = 0x05;	 		// Not learned transmitter flag transmitted via I2C
-			for (k=4;k>0; k--)   			// Transmit zeroes via I2C
-		 	i2c_xmt_buf[(5-k)] = 0;	
-			for (k=4;k>0; k--)   			// Transmit zeroes via I2C
-		 	i2c_xmt_buf[(9-k)] = 0;		
+		{	
 	      		lcd_clear();					// Display "Transmitter Not Learned" message
 			lcd_goto(LCD_LINE_1);			// on LCD
 	   		lcd_puts("Transmitter Not ");   
@@ -536,12 +428,7 @@ void Remote(void)
 		{
 
         		if ( !HopCHK())                			// Check Hopping Code integrity; are we within the acceptable window?
-			{
-				i2c_xmt_buf[0] = 0x07;	 		// Not valid transmitter flag transmitted via I2C
-				for (k=4;k>0; k--)   			// Transmit zeroes via I2C
-			 	i2c_xmt_buf[(5-k)] = 0;	
-				for (k=4;k>0; k--)   			// Transmit zeroes via I2C
-			 	i2c_xmt_buf[(9-k)] = 0;		
+			{	
 		      		lcd_clear();					// Display "Not Valid Transmitter" message
 				lcd_goto(LCD_LINE_1);			// on LCD
 		   		lcd_puts("Not a valid");   
@@ -565,12 +452,6 @@ void Remote(void)
                 			 Led = ON;
             			COut = TOUT;   				// Init LED output timer
          		} // recognized
-
-			i2c_xmt_buf[0] = 0x10;	 			// Learn successful flag to be transmitted via I2C
-			for (k=4;k>0; k--)   				// Load the serial number to the I2C transmit buffer
-		 	i2c_xmt_buf[(5-k)] = SEED[(k-1)];	
-			for (k=4;k>0; k--)   				// Load the decrypted data to the I2C transmit buffer
-		 	i2c_xmt_buf[(9-k)] = Buffer[(k-1)];		
 		}
     	} // normal mode
 } // remote
@@ -590,12 +471,8 @@ Interrupt(void)
 {
 	if(T0IF)				//  TMR0 interrupt for data packet aquisition
 	  rxi();
-	if(SSPIF)				//  SSP interrupt for I2C data transmission/rcv
-	  ssp_isr();
 	if(TMR1IF)			//  TMR1 interrupt for general timing 
 	 tmr1_isr();
-	
-
 }
 
 //--------------------------------------------------------------------
