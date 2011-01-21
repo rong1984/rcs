@@ -38,6 +38,8 @@ unsigned char syscfg1;
 unsigned char button_mask; //BUTTON MASK REGISTER
 unsigned char flags;
 unsigned char tx_index;
+unsigned char txcfg0;
+unsigned char txcfg1;
 
 void key_process()
 {
@@ -70,6 +72,26 @@ void key_process()
 		break;
 	}
 
+	switch(tx_index)
+	{
+		case TX0:
+			txcfg0 = eeprom_read(EE_TX0_DISC);
+			txcfg1 = eeprom_read(EE_TX0_CFG1);
+		break;
+		case TX1:
+			txcfg0 = eeprom_read(EE_TX1_DISC);
+			txcfg1 = eeprom_read(EE_TX1_CFG1);
+		break;
+		case TX2:
+			txcfg0 = eeprom_read(EE_TX2_DISC);
+			txcfg1 = eeprom_read(EE_TX2_CFG1);
+		break;
+		case TX3:
+			txcfg0 = eeprom_read(EE_TX3_DISC);
+			txcfg1 = eeprom_read(EE_TX3_CFG1);
+		break;		
+	}
+
 	for(i=0;i<cnt;i++)
 	{
    		LED = ON;
@@ -95,8 +117,8 @@ void main()
         delay_ms(200); 
     }
 
-	syscfg1 = eeprom_read(EE_SYSCFG1);
-	syscfg0 = eeprom_read(EE_SYSCFG0);
+	syscfg1 = eeprom_read(EE_SYS_CFG1);
+	syscfg0 = eeprom_read(EE_SYS_CFG0);
 
 	tx_index = eeprom_read(0xFF);
 	if(tx_index==0xff)
