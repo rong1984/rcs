@@ -1,0 +1,393 @@
+
+# 1 "C:\Users\xxxx\Desktop\20110118\PIC16F636\main.c"
+
+# 18 "C:\Program Files\HI-TECH Software\PICC\9.80\include\pic16f636.h"
+volatile unsigned char INDF @ 0x00;
+volatile unsigned char TMR0 @ 0x01;
+volatile unsigned char PCL @ 0x02;
+volatile unsigned char STATUS @ 0x03;
+volatile unsigned char FSR @ 0x04;
+
+volatile unsigned char PORTA @ 0x05;
+volatile unsigned char PORTC @ 0x07;
+
+# 29
+volatile unsigned char PCLATH @ 0x0A;
+volatile unsigned char INTCON @ 0x0B;
+volatile unsigned char PIR1 @ 0x0C;
+volatile unsigned char TMR1L @ 0x0E;
+volatile unsigned char TMR1H @ 0x0F;
+volatile unsigned char T1CON @ 0x10;
+volatile unsigned char WDTCON @ 0x18;
+volatile unsigned char CMCON0 @ 0x19;
+volatile unsigned char CMCON1 @ 0x1A;
+volatile unsigned char OPTION @ 0x81;
+
+volatile unsigned char TRISA @ 0x85;
+volatile unsigned char TRISC @ 0x87;
+
+# 45
+volatile unsigned char PIE1 @ 0x8C;
+volatile unsigned char PCON @ 0x8E;
+volatile unsigned char OSCCON @ 0x8F;
+volatile unsigned char OSCTUNE @ 0x90;
+volatile unsigned char LVDCON @ 0x94;
+volatile unsigned char WPUDA @ 0x95;
+volatile unsigned char IOCA @ 0x96;
+volatile unsigned char WDA @ 0x97;
+volatile unsigned char VRCON @ 0x99;
+volatile unsigned char EEDAT @ 0x9A;
+
+volatile unsigned char EEDATA @ 0x9A;
+volatile unsigned char EEADR @ 0x9B;
+
+volatile unsigned char EEADRL @ 0x9B;
+volatile unsigned char EECON1 @ 0x9C;
+volatile unsigned char EECON2 @ 0x9D;
+volatile unsigned char CRCON @ 0x110;
+volatile unsigned char CRDAT0 @ 0x111;
+volatile unsigned char CRDAT1 @ 0x112;
+volatile unsigned char CRDAT2 @ 0x113;
+volatile unsigned char CRDAT3 @ 0x114;
+
+
+
+volatile bit CARRY @ ((unsigned)&STATUS*8)+0;
+volatile bit DC @ ((unsigned)&STATUS*8)+1;
+volatile bit ZERO @ ((unsigned)&STATUS*8)+2;
+volatile bit PD @ ((unsigned)&STATUS*8)+3;
+volatile bit TO @ ((unsigned)&STATUS*8)+4;
+volatile bit RP0 @ ((unsigned)&STATUS*8)+5;
+volatile bit RP1 @ ((unsigned)&STATUS*8)+6;
+volatile bit IRP @ ((unsigned)&STATUS*8)+7;
+
+
+
+volatile bit RA0 @ ((unsigned)&PORTA*8)+0;
+volatile bit RA1 @ ((unsigned)&PORTA*8)+1;
+volatile bit RA2 @ ((unsigned)&PORTA*8)+2;
+volatile bit RA3 @ ((unsigned)&PORTA*8)+3;
+volatile bit RA4 @ ((unsigned)&PORTA*8)+4;
+volatile bit RA5 @ ((unsigned)&PORTA*8)+5;
+
+
+volatile bit RC0 @ ((unsigned)&PORTC*8)+0;
+volatile bit RC1 @ ((unsigned)&PORTC*8)+1;
+volatile bit RC2 @ ((unsigned)&PORTC*8)+2;
+volatile bit RC3 @ ((unsigned)&PORTC*8)+3;
+volatile bit RC4 @ ((unsigned)&PORTC*8)+4;
+volatile bit RC5 @ ((unsigned)&PORTC*8)+5;
+
+# 106
+volatile bit RAIF @ ((unsigned)&INTCON*8)+0;
+volatile bit INTF @ ((unsigned)&INTCON*8)+1;
+volatile bit T0IF @ ((unsigned)&INTCON*8)+2;
+volatile bit RAIE @ ((unsigned)&INTCON*8)+3;
+volatile bit INTE @ ((unsigned)&INTCON*8)+4;
+volatile bit T0IE @ ((unsigned)&INTCON*8)+5;
+volatile bit PEIE @ ((unsigned)&INTCON*8)+6;
+volatile bit GIE @ ((unsigned)&INTCON*8)+7;
+
+
+volatile bit TMR1IF @ ((unsigned)&PIR1*8)+0;
+volatile bit OSFIF @ ((unsigned)&PIR1*8)+2;
+volatile bit C1IF @ ((unsigned)&PIR1*8)+3;
+
+volatile bit C2IF @ ((unsigned)&PIR1*8)+4;
+
+volatile bit CRIF @ ((unsigned)&PIR1*8)+5;
+volatile bit LVDIF @ ((unsigned)&PIR1*8)+6;
+volatile bit EEIF @ ((unsigned)&PIR1*8)+7;
+
+
+volatile bit TMR1ON @ ((unsigned)&T1CON*8)+0;
+volatile bit TMR1CS @ ((unsigned)&T1CON*8)+1;
+volatile bit T1SYNC @ ((unsigned)&T1CON*8)+2;
+volatile bit T1OSCEN @ ((unsigned)&T1CON*8)+3;
+volatile bit T1CKPS0 @ ((unsigned)&T1CON*8)+4;
+volatile bit T1CKPS1 @ ((unsigned)&T1CON*8)+5;
+volatile bit TMR1GE @ ((unsigned)&T1CON*8)+6;
+volatile bit T1GINV @ ((unsigned)&T1CON*8)+7;
+
+
+volatile bit SWDTEN @ ((unsigned)&WDTCON*8)+0;
+volatile bit WDTPS0 @ ((unsigned)&WDTCON*8)+1;
+volatile bit WDTPS1 @ ((unsigned)&WDTCON*8)+2;
+volatile bit WDTPS2 @ ((unsigned)&WDTCON*8)+3;
+volatile bit WDTPS3 @ ((unsigned)&WDTCON*8)+4;
+
+
+volatile bit CM0 @ ((unsigned)&CMCON0*8)+0;
+volatile bit CM1 @ ((unsigned)&CMCON0*8)+1;
+volatile bit CM2 @ ((unsigned)&CMCON0*8)+2;
+volatile bit CIS @ ((unsigned)&CMCON0*8)+3;
+volatile bit C1INV @ ((unsigned)&CMCON0*8)+4;
+
+volatile bit C2INV @ ((unsigned)&CMCON0*8)+5;
+
+volatile bit C1OUT @ ((unsigned)&CMCON0*8)+6;
+
+volatile bit C2OUT @ ((unsigned)&CMCON0*8)+7;
+
+
+
+volatile bit C2SYNC @ ((unsigned)&CMCON1*8)+0;
+volatile bit T1GSS @ ((unsigned)&CMCON1*8)+1;
+
+
+volatile bit PS0 @ ((unsigned)&OPTION*8)+0;
+volatile bit PS1 @ ((unsigned)&OPTION*8)+1;
+volatile bit PS2 @ ((unsigned)&OPTION*8)+2;
+volatile bit PSA @ ((unsigned)&OPTION*8)+3;
+volatile bit T0SE @ ((unsigned)&OPTION*8)+4;
+volatile bit T0CS @ ((unsigned)&OPTION*8)+5;
+volatile bit INTEDG @ ((unsigned)&OPTION*8)+6;
+volatile bit RAPU @ ((unsigned)&OPTION*8)+7;
+
+
+
+volatile bit TRISA0 @ ((unsigned)&TRISA*8)+0;
+volatile bit TRISA1 @ ((unsigned)&TRISA*8)+1;
+volatile bit TRISA2 @ ((unsigned)&TRISA*8)+2;
+volatile bit TRISA3 @ ((unsigned)&TRISA*8)+3;
+volatile bit TRISA4 @ ((unsigned)&TRISA*8)+4;
+volatile bit TRISA5 @ ((unsigned)&TRISA*8)+5;
+
+
+volatile bit TRISC0 @ ((unsigned)&TRISC*8)+0;
+volatile bit TRISC1 @ ((unsigned)&TRISC*8)+1;
+volatile bit TRISC2 @ ((unsigned)&TRISC*8)+2;
+volatile bit TRISC3 @ ((unsigned)&TRISC*8)+3;
+volatile bit TRISC4 @ ((unsigned)&TRISC*8)+4;
+volatile bit TRISC5 @ ((unsigned)&TRISC*8)+5;
+
+# 198
+volatile bit TMR1IE @ ((unsigned)&PIE1*8)+0;
+volatile bit OSFIE @ ((unsigned)&PIE1*8)+2;
+volatile bit C1IE @ ((unsigned)&PIE1*8)+3;
+
+volatile bit C2IE @ ((unsigned)&PIE1*8)+4;
+
+volatile bit CRIE @ ((unsigned)&PIE1*8)+5;
+volatile bit LVDIE @ ((unsigned)&PIE1*8)+6;
+volatile bit EEIE @ ((unsigned)&PIE1*8)+7;
+
+
+volatile bit BOD @ ((unsigned)&PCON*8)+0;
+volatile bit POR @ ((unsigned)&PCON*8)+1;
+volatile bit WUR @ ((unsigned)&PCON*8)+3;
+volatile bit SBODEN @ ((unsigned)&PCON*8)+4;
+volatile bit ULPWUE @ ((unsigned)&PCON*8)+5;
+
+
+volatile bit SCS @ ((unsigned)&OSCCON*8)+0;
+volatile bit LTS @ ((unsigned)&OSCCON*8)+1;
+volatile bit HTS @ ((unsigned)&OSCCON*8)+2;
+volatile bit OSTS @ ((unsigned)&OSCCON*8)+3;
+volatile bit IRCF0 @ ((unsigned)&OSCCON*8)+4;
+volatile bit IRCF1 @ ((unsigned)&OSCCON*8)+5;
+volatile bit IRCF2 @ ((unsigned)&OSCCON*8)+6;
+
+
+volatile bit TUN0 @ ((unsigned)&OSCTUNE*8)+0;
+volatile bit TUN1 @ ((unsigned)&OSCTUNE*8)+1;
+volatile bit TUN2 @ ((unsigned)&OSCTUNE*8)+2;
+volatile bit TUN3 @ ((unsigned)&OSCTUNE*8)+3;
+volatile bit TUN4 @ ((unsigned)&OSCTUNE*8)+4;
+
+
+volatile bit LVDL0 @ ((unsigned)&LVDCON*8)+0;
+volatile bit LVDL1 @ ((unsigned)&LVDCON*8)+1;
+volatile bit LVDL2 @ ((unsigned)&LVDCON*8)+2;
+volatile bit LVDEN @ ((unsigned)&LVDCON*8)+4;
+volatile bit IRVST @ ((unsigned)&LVDCON*8)+5;
+
+
+volatile bit WPUDA0 @ ((unsigned)&WPUDA*8)+0;
+volatile bit WPUDA1 @ ((unsigned)&WPUDA*8)+1;
+volatile bit WPUDA2 @ ((unsigned)&WPUDA*8)+2;
+volatile bit WPUDA4 @ ((unsigned)&WPUDA*8)+4;
+volatile bit WPUDA5 @ ((unsigned)&WPUDA*8)+5;
+
+
+volatile bit IOCA0 @ ((unsigned)&IOCA*8)+0;
+volatile bit IOCA1 @ ((unsigned)&IOCA*8)+1;
+volatile bit IOCA2 @ ((unsigned)&IOCA*8)+2;
+volatile bit IOCA3 @ ((unsigned)&IOCA*8)+3;
+volatile bit IOCA4 @ ((unsigned)&IOCA*8)+4;
+volatile bit IOCA5 @ ((unsigned)&IOCA*8)+5;
+
+
+volatile bit WDA0 @ ((unsigned)&WDA*8)+0;
+volatile bit WDA1 @ ((unsigned)&WDA*8)+1;
+volatile bit WDA2 @ ((unsigned)&WDA*8)+2;
+volatile bit WDA4 @ ((unsigned)&WDA*8)+4;
+volatile bit WDA5 @ ((unsigned)&WDA*8)+5;
+
+
+volatile bit VR0 @ ((unsigned)&VRCON*8)+0;
+volatile bit VR1 @ ((unsigned)&VRCON*8)+1;
+volatile bit VR2 @ ((unsigned)&VRCON*8)+2;
+volatile bit VR3 @ ((unsigned)&VRCON*8)+3;
+volatile bit VRR @ ((unsigned)&VRCON*8)+5;
+volatile bit VREN @ ((unsigned)&VRCON*8)+7;
+
+
+volatile bit RD @ ((unsigned)&EECON1*8)+0;
+volatile bit WR @ ((unsigned)&EECON1*8)+1;
+volatile bit WREN @ ((unsigned)&EECON1*8)+2;
+volatile bit WRERR @ ((unsigned)&EECON1*8)+3;
+
+
+volatile bit CRREG0 @ ((unsigned)&CRCON*8)+0;
+volatile bit CRREG1 @ ((unsigned)&CRCON*8)+1;
+volatile bit ENCDEC @ ((unsigned)&CRCON*8)+6;
+volatile bit GODONE @ ((unsigned)&CRCON*8)+7;
+
+
+# 503 "C:\Program Files\HI-TECH Software\PICC\9.80\include\pic.h"
+#pragma inline(_nop)
+extern void _nop(void);
+
+# 41 "C:\Program Files\HI-TECH Software\PICC\9.80\include\eeprom_routines.h"
+extern void eeprom_write(unsigned char addr, unsigned char value);
+extern unsigned char eeprom_read(unsigned char addr);
+
+
+# 629 "C:\Program Files\HI-TECH Software\PICC\9.80\include\pic.h"
+#pragma inline(_delay)
+extern void _delay(unsigned long);
+
+# 25 "C:\Users\xxxx\Desktop\20110118\PIC16F636\eeprom.h"
+unsigned char ee_read(unsigned char eeprom_adress);
+unsigned char ee_write(unsigned char eeprom_adress, unsigned char eeprom_data);
+
+# 73 "C:\Users\xxxx\Desktop\20110118\PIC16F636\delay.h"
+extern void delay_ms(unsigned char);
+
+# 6 "C:\Users\xxxx\Desktop\20110118\PIC16F636\main.c"
+asm("\tpsect config,class=CONFIG,delta=2"); asm("\tdw ""0x3FDF & 0x3FFC & 0x3FF7 & 0x3FFF & 0x3FBF & 0x3F7F");
+
+void Init_pic16f636(void)
+{
+CMCON0 = 0x07;
+PORTA = 0;
+RA0 = 0;
+TMR1L = 0;
+TMR1H = 0;
+T1CON = 0x31;
+TRISA = 0x3C;
+
+# 22
+OSCCON = 0x61;
+OPTION = 0x46;
+WPUDA = 0x3C;
+
+
+
+WDA = 0;
+
+IOCA = 0x3C;
+RAIF = 0;
+RAIE = 1;
+GIE = 1;
+}
+
+unsigned char syscfg0;
+unsigned char syscfg1;
+unsigned char button_mask;
+unsigned char flags;
+unsigned char tx_index;
+
+void key_process()
+{
+char i,cnt;
+volatile char tmp;
+
+tmp = PORTA&0x3C;
+delay_ms(20);
+if(tmp != PORTA&0x3C)
+return;
+
+switch(tmp)
+{
+case 0x04:
+tx_index = (tx_index+1)%4;
+eeprom_write(0xFF, tx_index);
+cnt = tx_index+1;
+break;
+case 0x20:
+cnt = 2;
+break;
+case 0x10:
+cnt = 3;
+break;
+case 0x08:
+cnt = 4;
+break;
+default:
+return;
+break;
+}
+
+for(i=0;i<cnt;i++)
+{
+RA0 = 0;
+delay_ms(200);
+RA0 = 1;
+delay_ms(200);
+}
+
+}
+
+void main()
+{
+char i,cnt;
+volatile char tmp;
+
+Init_pic16f636();
+
+for(i=0; i< 5; i++ )
+{
+RA0 = 0;
+delay_ms(200);
+RA0 = 1;
+delay_ms(200);
+}
+
+syscfg1 = eeprom_read(0x3D);
+syscfg0 = eeprom_read(0x3F);
+
+tx_index = eeprom_read(0xFF);
+if(tx_index==0xff)
+{
+tx_index = 0;
+eeprom_write(0xFF, tx_index);
+}
+
+# 113
+if((((syscfg1) & (1<<(2))) != 0))
+button_mask = 0x3B;
+
+# 163
+while(1)
+{
+asm("sleep");
+}
+}
+
+static void interrupt
+isr(void)
+{
+volatile unsigned char tmp;
+
+if(RAIF)
+{
+RAIE = 0;
+
+# 188
+key_process();
+RAIF = 0;
+RAIE = 1;
+}
+}
