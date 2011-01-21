@@ -19,7 +19,7 @@ void Init_pic16f636(void)
 						//TRISA3 = 1 RA3 is input   PB4
 						//TRISA4 = 1 RA4 is input   PB3
 						//TRISA5 = 1 RA5 is input   PB2
-    OSCCON = 0x61;        // internal 4 MHZ
+    OSCCON = 0x61;      // internal 4 MHZ
 	OPTION = 0x46;
 	WPUDA = 0x3C;
 #ifdef PULLUP
@@ -112,54 +112,7 @@ void main()
 
 	if(BIT_TEST(syscfg1, INDSEL))
 		button_mask = 0x3B;	
-/*
-	flags = 0;
 
-	while(1)
-	{
-		tmp = PORTA&0x3C;
-		delay_ms(20);
-		if(tmp != PORTA&0x3C)
-			continue;
-
-		switch(PORTA&0x3C)
-		{
-			case PB1:
-				tx_index = (tx_index+1)%4;
-				eeprom_write(0xFF, tx_index);
-				cnt = tx_index+1;
-				flags = 1;
-			break;
-			case PB2:
-				cnt = 2;
-				flags = 1;
-			break;
-			case PB3:
-				cnt = 3;
-				flags = 1;
-			break;
-			case PB4:
-				cnt = 4;
-				flags = 1;
-			break;
-			default:
-				cnt = 0;
-				flags = 0;
-			break;
-		}
-
-		if(flags)
-		{
-			for(i=0;i<cnt;i++)
-			{
-        		LED = ON;
-        		delay_ms(200);
-        		LED = OFF;
-        		delay_ms(200);
-			}
- 		}
-	}
-*/
 	while(1)
 	{
 		asm("sleep");
@@ -174,17 +127,6 @@ isr(void)
 	if(RAIF)
 	{
 		RAIE = 0;
-/*
-		tmp = PORTA&0x3C;
-		LED = ON;
-		delay_ms(20);
-
-		if(tmp == PORTA&0x3C)
-		{
-			LED = OFF;
-			key_process(tmp);
-		}
-*/
 		key_process();
 		RAIF = 0;
 		RAIE = 1;
