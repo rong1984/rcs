@@ -19,7 +19,7 @@ void Init_pic16f636(void)
 						//TRISA3 = 1 RA3 is input   PB4
 						//TRISA4 = 1 RA4 is input   PB3
 						//TRISA5 = 1 RA5 is input   PB2
-    OSCCON = 0x61;      // internal 4 MHZ
+	OSCCON = 0x61;        // internal 4 MHZ
 	OPTION = 0x46;
 	WPUDA = 0x3C;
 #ifdef PULLUP

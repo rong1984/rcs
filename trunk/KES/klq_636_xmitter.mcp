@@ -45,18 +45,17 @@ file_003=no
 file_004=no
 file_005=no
 [FILE_INFO]
-file_000=C:\Users\xxxx\Desktop\20110118\PIC16F636\delay.c
-file_001=C:\Users\xxxx\Desktop\20110118\PIC16F636\eeprom.c
-file_002=C:\Users\xxxx\Desktop\20110118\PIC16F636\main.c
-file_003=C:\Users\xxxx\Desktop\20110118\PIC16F636\delay.h
-file_004=C:\Users\xxxx\Desktop\20110118\PIC16F636\global.h
-file_005=C:\Users\xxxx\Desktop\20110118\PIC16F636\eeprom.h
+file_000=delay.c
+file_001=eeprom.c
+file_002=main.c
+file_003=delay.h
+file_004=eeprom.h
+file_005=global.h
 [SUITE_INFO]
 suite_guid={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 suite_state=
 [TOOL_SETTINGS]
-TS{3FF1D5F2-E530-4850-9F70-F61D55BD1AC9}= C9=4
-TS{3FF1D5F2-E530-4850-9F70-F61D55BD1AC9}_alt=yes
+TS{3FF1D5F2-E530-4850-9F70-F61D55BD1AC9}=C9=4
 [INSTRUMENTED_TRACE]
 enable=0
 transport=0
