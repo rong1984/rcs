@@ -56,6 +56,11 @@
 #define PB3	0x10
 #define PB4	0x08
 
+#define TX0	0
+#define TX1	1
+#define TX2	2
+#define TX3	3
+
 #define BIT_TEST(x, y) (((x) & (1<<(y))) != 0)
 #define BIT_SET(var,bitno) ((var) |= 1UL << (bitno))
 #define BIT_CLR(var,bitno) ((var) &= ~(1UL << (bitno)))
