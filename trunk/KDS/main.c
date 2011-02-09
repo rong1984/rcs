@@ -70,6 +70,10 @@ void init_pic16f636(void)
 	TRISA5 = 0;
 	TRISA1 = 0;
 	TRISC = 0x00;
+	TRISC0 = 1;
+	TRISC1 = 1;
+	TRISC2 = 1;
+	TRISC3 = 1;
 //    OSCCON = 0x61;		// internal 4 MHZ
     OSCCON = 0x75;		// internal 8 MHZ
 //	OPTION = 0x46;
@@ -94,6 +98,59 @@ void set_led(unsigned char status)
 		LED = OFF;
 		TRISA1 = 1;
 	}
+}
+volatile unsigned char motor_flag;
+volatile unsigned char sensor_flag;
+volatile unsigned char dir;
+#define UP 0
+#define DOWN 1
+void setup(void)
+{
+	if(RC1 == 1)
+		motor_flag = 1;
+	else
+		motor_flag = 0;
+
+	if(RC0 == 1)
+		sensor_flag = 1;
+	else
+		sensor_flag = 0;	
+}
+
+void up(void)
+{
+	dir = UP;
+	if(motor_flag)
+	{
+		RC4 = 0;
+		RC5 = 1;
+	}
+	else
+	{
+		RC4 = 1;
+		RC5 = 0;
+	}
+}
+
+void down(void)
+{
+	dir = DOWN;
+	if(motor_flag)
+	{
+		RC5 = 0;
+		RC4 = 1;
+	}
+	else
+	{
+		RC4 = 0;
+		RC5 = 1;
+	}
+}
+
+void stop(void)
+{
+	RC4 = 0;
+	RC5 = 0;
 }
 
 // Remote Routine
@@ -122,14 +179,9 @@ void remote(void)
 			switch(Buffer[3]&0xF0)
 			{
 				case 0x10://S1
-					for(k=0;k<1;k++)
-					{
-						RC5 = ON;
-						delay_ms(100);
-						RC5 = OFF;
-						delay_ms(100);
-					}
+					up();
 				break;
+
 				case 0x20://S2
 					for(k=0;k<3;k++)
 					{
@@ -139,14 +191,13 @@ void remote(void)
 						delay_ms(100);
 					}
 				break;
+
 				case 0x40://S3
-					for(k=0;k<5;k++)
-					{
-						LED_LEARN = ON;
-						delay_ms(100);
-						LED_LEARN = OFF;
-						delay_ms(100);
-					}
+					down();
+				break;
+
+				case 0x80: 
+					stop();
 				break;
 			}
         break;
@@ -340,6 +391,22 @@ void tmr1_isr(void)
     TMR1IF = 0;        
     TMR1ON = 1;                // Turn on timer 1 1:4 prescaler
     Continue_Count = 1;    
+
+	setup();
+	if(sensor_flag)
+	{
+		if((RC2==1)&&(dir==UP))
+			stop();
+		if((RC3==1)&&(dir==DOWN))
+			stop();
+	}
+	else
+	{
+		if((RC3==1)&&(dir==UP))
+			stop();
+		if((RC2==1)&&(dir==DOWN))
+			stop();
+	}	
 } 
 
 //--------------------------------------------------------------------
