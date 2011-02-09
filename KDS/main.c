@@ -67,8 +67,8 @@ void init_pic16f636(void)
 						//TRISA3 = 1 RA3 is input   PB4
 						//TRISA4 = 1 RA4 is input   PB3
 						//TRISA5 = 1 RA5 is input   PB2
+//	TRISA1 = 0;
 	TRISA5 = 0;
-	TRISA1 = 0;
 	TRISC = 0x00;
 	TRISC0 = 1;
 	TRISC1 = 1;
@@ -86,7 +86,7 @@ void init_pic16f636(void)
 #endif
 }
 
-void set_led(unsigned char status)
+void set_learn_led(unsigned char status)
 {
 	if(status == ON)
 	{
@@ -99,11 +99,13 @@ void set_led(unsigned char status)
 		TRISA1 = 1;
 	}
 }
+
 volatile unsigned char motor_flag;
 volatile unsigned char sensor_flag;
 volatile unsigned char dir;
 #define UP 0
 #define DOWN 1
+
 void setup(void)
 {
 	if(RC1 == 1)
@@ -260,8 +262,9 @@ void remote(void)
             else                                            // hopping code incrementing properly
             {
                 HopUpdate();                           // update memory
-                LED_LEARN = ON;                //Set an Output. Note: thsi can be set according to function code
-                if(((Buffer[7] ^ FCode) & 0xf0) == 0)    // check against learned function code
+                //LED_LEARN = ON;                //Set an Output. Note: thsi can be set according to function code
+                set_learn_led(ON);
+				if(((Buffer[7] ^ FCode) & 0xf0) == 0)    // check against learned function code
                     LED_SIG = ON;
                 COut = TOUT;                   // Init LED output timer
             } // recognized
@@ -346,7 +349,8 @@ void main(void)
                 if(COut == 0)                 // If counter reaches zero then..
                 {
                     LED_SIG = OFF;                      // all LEDS off
-					LED_LEARN = OFF;
+					set_learn_led(OFF);
+					//LED_LEARN = OFF;
                     //LED_DS1 = OFF;
                     //LED_DS2 = OFF;
                     //LED_DS3 = OFF;
@@ -393,6 +397,14 @@ void tmr1_isr(void)
     Continue_Count = 1;    
 
 	setup();
+
+	if(RA3==0)
+		up();
+	if(RA4==0)
+		stop();
+	if(RA1==0)
+		down();
+
 	if(sensor_flag)
 	{
 		if((RC2==1)&&(dir==UP))
