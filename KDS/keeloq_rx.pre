@@ -1,5 +1,5 @@
 
-# 1 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\main.c"
+# 1 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keeloq_rx.c"
 
 # 18 "C:\Program Files\HI-TECH Software\PICC\9.80\include\pic16f636.h"
 volatile unsigned char INDF @ 0x00;
@@ -258,398 +258,211 @@ extern unsigned char eeprom_read(unsigned char addr);
 #pragma inline(_delay)
 extern void _delay(unsigned long);
 
-# 26 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\global.h"
-extern unsigned char Buffer[];
-extern unsigned char DKEY[];
-
-# 73 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\delay.h"
-extern void delay_ms(unsigned char);
-
 # 38 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keeloq_rx.h"
 void rxi(void);
 void init_receiver(void);
 
-# 36 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keygen.h"
-void LoadManufCode(void);
-void NormalKeyGen(void);
-unsigned char DecCHK(void);
-unsigned char ReqResync(void);
-unsigned char HopCHK(void);
+# 65 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keeloq_rx.c"
+bank1 extern unsigned char RX_Buffer[];
+extern unsigned char RFstate;
+extern signed char RFcount;
+extern unsigned char Bptr;
+extern unsigned char BitCount;
+extern unsigned int XTMR;
+extern volatile bit RFsynch;
+extern volatile bit RFFull;
+extern volatile bit RFBit;
+extern unsigned char RFtype;
 
-# 4 "C:\Program Files\HI-TECH Software\PICC\9.80\include\string.h"
-typedef int ptrdiff_t;
-typedef unsigned size_t;
-typedef unsigned short wchar_t;
-
-
-extern int errno;
-
-# 22
-extern void * memcpy(void *, const void *, size_t);
-extern void * memmove(void *, const void *, size_t);
-extern void * memset(void *, int, size_t);
-
-# 35
-extern char * strcat(char *, const char *);
-extern char * strcpy(char *, const char *);
-extern char * strncat(char *, const char *, size_t);
-extern char * strncpy(char *, const char *, size_t);
-extern char * strdup(const char *);
-extern char * strtok(char *, const char *);
-
-
-extern int memcmp(const void *, const void *, size_t);
-extern int strcmp(const char *, const char *);
-extern int stricmp(const char *, const char *);
-extern int strncmp(const char *, const char *, size_t);
-extern int strnicmp(const char *, const char *, size_t);
-extern void * memchr(const void *, int, size_t);
-extern size_t strcspn(const char *, const char *);
-extern char * strpbrk(const char *, const char *);
-extern size_t strspn(const char *, const char *);
-extern char * strstr(const char *, const char *);
-extern char * stristr(const char *, const char *);
-extern char * strerror(int);
-extern size_t strlen(const char *);
-extern char * strchr(const char *, int);
-extern char * strichr(const char *, int);
-extern char * strrchr(const char *, int);
-extern char * strrichr(const char *, int);
-
-# 36 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keeloq_alg.h"
-void Decrypt(void);
-void Key_Alg(void);
-
-# 30 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\table.h"
-unsigned char Find(void);
-unsigned char Insert(void);
-unsigned char IDWrite(void);
-unsigned char HopUpdate(void);
-unsigned char ClearMem(void);
-
-# 10 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\main.c"
-asm("\tpsect config,class=CONFIG,delta=2"); asm("\tdw ""0x3FDF & 0x3FFC & 0x3FF7 & 0x3FFF & 0x3FBF & 0x3F7F");
-
-# 21
-unsigned char RFstate;
-signed char RFcount;
-unsigned char Bptr;
-unsigned char BitCount;
-unsigned char RFtype;
-
-
-
-bit FHopOK;
-bit FSame;
-bit FLearn;
-bit F2Chance;
-volatile bit RFFull;
-volatile bit RFBit;
-volatile bit RFsynch;
-
-
-unsigned char Buffer[22];
-bank1 unsigned char RX_Buffer[22];
-
-unsigned char SEED[4];
-unsigned int NextHop;
-unsigned char COut;
-unsigned char FCode;
-unsigned int XTMR;
-bank1 unsigned char CLearn, CTLearn;
-bank1 unsigned char CFlash, CTFlash;
-bank1 unsigned int Dato;
-bank1 unsigned int Ind;
-bank1 unsigned int Hop;
-bank1 unsigned int EHop;
-bank1 unsigned int ETemp;
-
-unsigned char Continue_Count;
-
-void init_pic16f636(void)
-{
-CMCON0 = 0x07;
-PORTA = 0;
-PORTC = 0;
-TMR1L = 0;
-TMR1H = 0;
-T1CON = 0x31;
-TRISA = 0x3F;
-
-# 70
-TRISA5 = 0;
-TRISA1 = 0;
-TRISC = 0x00;
-
-OSCCON = 0x75;
-
-OPTION = 0x0F;
-WPUDA = 0x3C;
-
-
-
-WDA = 0;
-
-}
-
-void set_led(unsigned char status)
-{
-if(status == 1)
-{
-TRISA1 = 0;
-RA1 = 1;
-}
-else
-{
-RA1 = 0;
-TRISA1 = 1;
-}
-}
-
-# 108
-void remote(void)
+# 81
+void rxi(void)
 {
 
+RFBit = RA0;
+TMR0 = 0x98;
 
-char k;
+T0IF = 0;
+XTMR++;
+if (RFFull)
+return;
 
-memcpy(Buffer, RX_Buffer, 13);
-RFFull = 0;
-
-switch(RFtype)
+switch( RFstate)
 {
-case 1:
-NormalKeyGen();
-Decrypt();
-switch(Buffer[3]&0xF0)
-{
-case 0x10:
-for(k=0;k<1;k++)
-{
-RC5 = 1;
-delay_ms(100);
-RC5 = 0;
-delay_ms(100);
-}
-break;
-case 0x20:
-for(k=0;k<3;k++)
-{
-RC4 = 1;
-delay_ms(100);
-RC4 = 0;
-delay_ms(100);
-}
-break;
-case 0x40:
-for(k=0;k<5;k++)
-{
-RA1 = 1;
-delay_ms(100);
-RA1 = 0;
-delay_ms(100);
-}
-break;
-}
-break;
 
 case 2:
 
+if ( RFBit == 0)
+
+{
+
+
+
+RFstate = 3;
+}
+else
+{
+RFcount--;
+if ( RFcount < -7)
+{
+if (BitCount <65)
+{
+RFtype = 0;
+RFstate = 1;
+Bptr = 0;
+BitCount = 0;
+break;
+}
+if ((BitCount>=65) & (BitCount < 100))
+{
+RFtype = 1;
+}
+
+if ((BitCount>=100) & (BitCount < 160))
+{
+RFtype = 3;
+}
+if (BitCount>=160)
+{
+RFtype = 2;
+}
+
+RFstate = 0;
+RFFull = 0x01;
+
+}
+}
 break;
 
 case 3:
+if ( RFBit)
+{
+
+
+
+RFstate= 2;
+RX_Buffer[Bptr] >>= 1;
+if ( RFcount >= 0)
+{
+RX_Buffer[Bptr]+=0x80;
+}
+RFcount = 0;
+
+if ( ( ++BitCount & 7) == 0)
+Bptr++;
+if (BitCount == (160+10))
+{
+RFstate = 0;
+RFFull = 0x1;
+RFtype = 2;
+}
+}
+else
+{
+RFcount++;
+if ( RFcount >= 7)
+{
+
+RX_Buffer[Bptr] >>= 1;
+if ( RFcount >= 0)
+{
+RX_Buffer[Bptr]+=0x80;
+}
+
+if (BitCount <65)
+{
+RFtype = 0;
+RFstate = 1;
+Bptr = 0;
+BitCount = 0;
+break;
+}
+if (BitCount>=65 & BitCount < 100)
+{
+RFtype = 1;
+}
+
+if (BitCount>=100 & BitCount < 160)
+{
+RFtype = 3;
+}
+if (BitCount>=160)
+{
+RFtype = 2;
+}
+
+RFstate = 0;
+RFFull = 0x01;
+}
+}
 
 break;
 
+case 1:
+if ( RFBit)
+{
+
+
+
+if ( ( RFcount < 25) || ( RFcount >= 45))
+{
+RFstate = 0;
+RFcount = 0;
+break;
+}
+else
+{
+RFcount =0;
+RFstate= 2;
+}
+}
+else
+{
+RFcount++;
+}
+break;
+
+
+case 4:
+if (!RFsynch)
+{
+if (RFBit)
+{
+RFsynch = 1;
+}
+}
+else
+{
+if (!RFBit)
+{
+RFstate = 1;
+RFsynch = 0;
+}
+}
+break;
+
+
+case 0:
 default:
-NormalKeyGen();
-Decrypt();
+RFstate = 4;
+RFcount = 0;
+Bptr = 0;
+BitCount = 0;
+RFsynch = 0;
 break;
+
+}
 }
 
-if(DecCHK() == 0)
+void init_receiver()
 {
-return;
-}
-
-if(FLearn)
-{
-if(Find()== 0)
-{
-if(!Insert())
-return;
-}
-
-IDWrite();
-FHopOK = 1;
-HopUpdate();
-
-CFlash = 10;
-CTFlash = 5;
-RA5 = 1;
-FLearn = 0;
-}
-else
-{
-if(Find()== 0)
-{
-return;
-}
-else
-{
-if(!HopCHK())
-{
-return;
-}
-if(FSame)
-{
-if(COut >0)
-COut = 4;
-else
-return;
-}
-else
-{
-HopUpdate();
-RA1 = 1;
-if(((Buffer[7] ^ FCode) & 0xf0) == 0)
-RA5 = 1;
-COut = 4;
-}
-}
-}
-}
-
-
-void main(void)
-{
-char i;
-init_pic16f636();
-
-for(i=0; i< 5; i++ )
-{
-
-RA5 = 1;
-delay_ms(200);
-
-RA5 = 0;
-delay_ms(200);
-}
-
-
-TMR1L = 0x00;
-TMR1H = 0x00;
-TMR1IF = 0;
-T1CON = 0x11;
-TMR1IE = 1;
-
-init_receiver();
-
-INTCON = 0x60;
+TMR0 = 0;
+T0CS = 0;
+T0IF = 0;
+T0IE = 1;
 GIE = 1;
-
-while(1)
-{
-
-if(RFFull)
-{
-RA5 = 1;
-remote();
-RA5 = 0;
+RFstate = 0;
 RFFull = 0;
+XTMR = 0;
+RFtype = 0;
 }
 
-
-
-if(Continue_Count)
-{
-Continue_Count = 0;
-
-if(!RA2)
-{
-CLearn++;
-
-if(CLearn == 128)
-{
-RA5 = 0;
-while(!RA2);
-RA5 = 1;
-ClearMem();
-
-COut = 4;
-CLearn = 0;
-FLearn = 0;
-}
-
-if(CLearn == 4)
-{
-FLearn = 1;
-CTLearn = 255;
-RA5 = 1;
-}
-}
-else
-CLearn=0;
-
-if(COut > 0)
-{
-COut--;
-if(COut == 0)
-{
-RA5 = 0;
-RA1 = 0;
-
-
-
-
-}
-}
-
-if(CTLearn > 0)
-{
-CTLearn--;
-if(CTLearn == 0)
-{
-RA5 = 0;
-FLearn = 0;
-}
-}
-
-if(CFlash > 0)
-{
-CTFlash--;
-if(CTFlash == 0)
-{
-CTFlash = 5;
-CFlash--;
-RA5 = 0;
-if(CFlash & 1)
-RA5 = 1;
-}
-}
-}
-}
-}
-
-
-
-
-void tmr1_isr(void)
-{
-TMR1ON= 0;
-TMR1L = 0x00;
-TMR1H = 0x00;
-TMR1IF = 0;
-TMR1ON = 1;
-Continue_Count = 1;
-}
-
-# 352
-static void interrupt
-Interrupt(void)
-{
-if(T0IF)
-rxi();
-if(TMR1IF)
-tmr1_isr();
-}

@@ -8,16 +8,15 @@
 	;
 	; Compiler options:
 	;
-	; -oKeeLoq3 Dev Kit Base Station.cof -mKeeLoq3 Dev Kit Base Station.map \
-	; --summary=default --output=default main.p1 KeeLoqAlg.p1 keygen.p1 \
-	; table.p1 lcd.p1 delay.p1 i2c.p1 KeeLoq_RX1.p1 eusart.p1 --chip=16F886 \
+	; -okds.cof -mkds.map --summary=default --output=default main.p1 \
+	; delay.p1 keeloq_rx.p1 keygen.p1 keeloq_alg.p1 table.p1 --chip=16F636 \
 	; -P --runtime=default --opt=default -D__DEBUG=1 -g --asmlist \
 	; --errformat=Error   [%n] %f; %l.%c %s --msgformat=Advisory[%n] %s \
 	; --warnformat=Warning [%n] %f; %l.%c %s
 	;
 
 
-	processor	16F886
+	processor	16F636
 
 	global	_main,start,_exit,reset_vec
 	fnroot	_main

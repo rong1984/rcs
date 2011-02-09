@@ -1,11 +1,11 @@
 
-# 1 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\delay.c"
+# 1 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\delay.c"
 
-# 73 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\delay.h"
-extern void DelayMs(unsigned char);
+# 73 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\delay.h"
+extern void delay_ms(unsigned char);
 
-# 44 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\delay.c"
-void DelayMs(unsigned char cnt)
+# 44 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\delay.c"
+void delay_ms(unsigned char cnt)
 {
 
 # 53

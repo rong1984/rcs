@@ -3,7 +3,7 @@
 //							 Software License Agreement
 //
 // The software supplied herewith by Microchip Technology Incorporated 
-// (the "Company") for its PICmicro® Microcontroller is intended and 
+// (the "Company") for its PICmicro?Microcontroller is intended and 
 // supplied to you, the Company’s customer, for use solely and 
 // exclusively on Microchip PICmicro Microcontroller products. The 
 // software is owned by the Company and/or its supplier, and is 
@@ -34,16 +34,15 @@
 //  Compiled using HiTech PIC C compiler V9.60 std
 //********************************************************************
 
- #include <pic.h>
-#include "KeeLoq_HW.H"
-#include "Keeloq_RX.H"
+#include "htc.h"
+#include "keeloq_rx.h"
 
 
 //--------------------------------------------------------------------
 // Defines
 //--------------------------------------------------------------------
 
-#define DEFAULT_TMR0    0xAC	 // This will give a 60us default int rate
+#define DEFAULT_TMR0    0x98	 // This will give a 60us default int rate
 	  
 #define KNBIT          65             	// Number of bits for Keeloq - 1
 #define XNBIT		  100		// Number of bits for XTEA -1 104
@@ -69,9 +68,9 @@ extern signed   char 		RFcount;		// Timer counter
 extern unsigned char 	Bptr;		// Receive buffer pointer
 extern unsigned char 	BitCount;		// Received bits counter
 extern unsigned int 		XTMR;		// 16 bit extended timer
-extern bit     	RFsynch;				// High level detect prior to synch pulse
-extern bit 		RFFull;     			// Buffer full
-extern bit 		RFBit;				// Sampled RF signal
+extern volatile bit     		RFsynch;		// High level detect prior to synch pulse
+extern volatile bit 		RFFull;     	// Buffer full
+extern volatile bit 		RFBit;		// Sampled RF signal
 extern unsigned char		RFtype;		// Determines what type of encrypted signal
 									// was received
 
@@ -84,6 +83,7 @@ void rxi(void)
     // this routine gets called every time TMR0 overflows
     	RFBit = RFIn;           			// sampling RF pin verify!!!
 	TMR0 = DEFAULT_TMR0;
+
     	T0IF = 0;
     	XTMR++;                    			 // extended 16 long timer update
     if (RFFull)                 			// avoid overrun
@@ -117,7 +117,7 @@ void rxi(void)
 			}
 		if ((BitCount>=KNBIT) & (BitCount < XNBIT))			// Is this standard Keeloq?
 		 	{
-				RFtype = KeeLoq;
+				RFtype = KEELOQ;
 			}
 
 		if ((BitCount>=XNBIT) & (BitCount < ANBIT))			// Is this XTEA?
@@ -181,7 +181,7 @@ void rxi(void)
 			}
 		if (BitCount>=KNBIT & BitCount < XNBIT)			// Is this standard Keeloq?
 		 	{
-				RFtype = KeeLoq;
+				RFtype = KEELOQ;
 			}
 
 		if (BitCount>=XNBIT & BitCount < ANBIT)			// Is this AES?
@@ -256,8 +256,7 @@ void rxi(void)
     } // switch
 } // rxi 
 
-
-void InitReceiver()
+void init_receiver()
 {
     TMR0 = 0;
     T0CS = 0;
@@ -267,8 +266,7 @@ void InitReceiver()
     RFstate = TRFreset;         		// reset state machine in all other cases
     RFFull = 0;                 			// start with buffer empty
     XTMR = 0;                   			// start extended timer
-   RFtype = 0;						// Type of incoming data (Keeloq, AES, XTEA)
-
+	RFtype = 0;						// Type of incoming data (Keeloq, AES, XTEA)
  }            
 
 //**********************************************************************

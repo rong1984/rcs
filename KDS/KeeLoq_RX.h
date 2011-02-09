@@ -3,7 +3,7 @@
 //							 Software License Agreement
 //
 // The software supplied herewith by Microchip Technology Incorporated 
-// (the "Company") for its PICmicro® Microcontroller is intended and 
+// (the "Company") for its PICmicro?Microcontroller is intended and 
 // supplied to you, the Company’s customer, for use solely and 
 // exclusively on Microchip PICmicro Microcontroller products. The 
 // software is owned by the Company and/or its supplier, and is 
@@ -33,11 +33,13 @@
 //
 //  Compiled using HiTech PIC C compiler V9.60 std
 //********************************************************************
+#define RFIn	RA0
+
 void rxi(void);				//TMR0 Interrrupt routine. Receives incoming trasnmission
-void InitReceiver(void);		// Initalizes receiver routine
+void init_receiver(void);		// Initalizes receiver routine
 
 //defines
-#define	KeeLoq	1
+#define	KEELOQ	1
 #define	AES		2
 #define	XTEA	3
 
