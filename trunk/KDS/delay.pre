@@ -1,0 +1,20 @@
+
+# 1 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\delay.c"
+
+# 73 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\delay.h"
+extern void DelayMs(unsigned char);
+
+# 44 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\delay.c"
+void DelayMs(unsigned char cnt)
+{
+
+# 53
+unsigned char i;
+do {
+i = 4;
+do {
+{ unsigned char _dcnt; _dcnt = (250)/((12*1000L)/(8*1000L))|1; while(--_dcnt != 0) continue; };
+} while(--i);
+} while(--cnt);
+
+}

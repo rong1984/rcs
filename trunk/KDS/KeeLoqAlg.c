@@ -33,12 +33,12 @@
 //  optimized for HITECH PIC C compiler V9.60 std
 // 
 //=========================================================================
-
+#include <htc.h>
 #include "global.h"
+//#include <aspic.h>
 
-
-static unsigned char DKEY[8]; 		// Decryption key
-static unsigned char aux;	
+unsigned char DKEY[8]; 		// Decryption key
+	unsigned char aux;	
 
 //-------------------------------------------------------------------------
 // Decrypt()
@@ -47,7 +47,7 @@ void Decrypt(void)
 {
     unsigned char  i, j, key;
 	signed char p;
-	
+	unsigned char keep;		// temporarily hold nibble swap data
     
     p = 1;
     
@@ -76,8 +76,24 @@ void Decrypt(void)
 
 
             // move bit in position 7
-            if ( BIT_TEST( Buffer[2],3)) 
-                asm("swapf _aux,f");
+            if ( BIT_TEST( Buffer[2],3))
+			{ 
+//BB - avoiding inline asm if possible... swap low and high 
+//nibbles contained in aux.  There are probably lots of ways
+//to do this.  
+//                asm("swapf _aux,f");
+
+				// keep holds top 4 bits of aux
+				keep = aux >> 4;
+				// masks off top bits, which should be 0 anyway
+				keep = keep & 0x0f;
+				// aux now holds just the ls nibble
+				aux = aux & 0x0f;
+				// shift ls nibble to ms nibble
+				aux = aux << 4;
+				// completes the swap
+				aux = aux | keep;
+			}
             if ( BIT_TEST( Buffer[1],0)) 
                 aux<<=2; 
             if (BIT_TEST( Buffer[0],0)) 
@@ -87,13 +103,31 @@ void Decrypt(void)
             aux ^= Buffer[1] ^ Buffer[3] ^ key;
             
             // shift in buffer
-            #asm
-            rlf _aux,w
-            rlf _Buffer,f
-            rlf _Buffer+1,f
-            rlf _Buffer+2,f
-            rlf _Buffer+3,F
-            #endasm
+		STATUS &= 0xFE;
+		Buffer[3] <<= 1;
+		if (BIT_TEST(Buffer[2],7))
+			Buffer[3] |= 0x01;
+		STATUS &= 0xFE;
+		Buffer[2] <<=1;
+		if (BIT_TEST(Buffer[1],7))
+			Buffer[2] |= 0x01;
+		STATUS &= 0xFE;
+		Buffer[1] <<=1;
+		if (BIT_TEST(Buffer[0],7))
+			Buffer[1] |= 0x01;
+		STATUS &= 0xFE;		
+		Buffer[0] <<=1;
+		if (BIT_TEST(aux,7))
+			Buffer[0] |= 0x01;	
+
+//  alternative assembly code
+//            #asm
+//            rlf _aux,w
+//            rlf _Buffer,f
+//            rlf _Buffer+1,f
+//            rlf _Buffer+2,f
+//            rlf _Buffer+3,F
+//            #endasm
 
             // rotate Dkey
             key<<=1;

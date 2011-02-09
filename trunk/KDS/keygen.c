@@ -178,6 +178,8 @@ unsigned char ReqResync(void)
 //----------------------------------------------------------------------
 unsigned char HopCHK(void)
 {
+    volatile signed int 	COUNTCHECK;
+
     FHopOK = FALSE;             // Hopping Code is not verified yet
     FSame = FALSE;              // Hopping Code is not the same as previous
 
@@ -197,22 +199,25 @@ unsigned char HopCHK(void)
         return ReqResync();         // memory corrupted need a resync
     
     // main comparison
-    ETemp = Hop - EHop;             // subtract last value from new one
+    COUNTCHECK = Hop - EHop;           // subtract last value from new one
 
-    if ( ETemp < 0)                 // locked region
-        return FALSE;               // fail
+    if ( COUNTCHECK < 0)                 	// locked region
+        return FALSE;               		// fail
 
-    else if ( ETemp > 16)           // resync region
+    else if (COUNTCHECK <= 16)		// 0>= ETemp >16 ; open window
+    {
+        if ( ETemp == 0)            		// same code (ETemp == 0)
+           	FSame = TRUE;           		// rise a flag
+
+        	FHopOK = TRUE;           
+        return TRUE;
+    }	
+
+    else if (COUNTCHECK < 1000)         // resync region
         return ReqResync();
 
-    else                            // 0>= ETemp >16 ; open window
-    {
-        if ( ETemp == 0)            // same code (ETemp == 0)
-            FSame = TRUE;           // rise a flag
-
-        FHopOK = TRUE;           
-        return TRUE;
-    }
+    else                            
+	return FALSE; 
 } 
 
 //----------------------------------------------------------------------

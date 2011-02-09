@@ -34,7 +34,7 @@
 //  Compiled using HiTech PIC C compiler V9.60 std
 //********************************************************************
 
-#include "PIC16F887.H"
+ #include <pic.h>
 #include "KeeLoq_HW.H"
 #include "Keeloq_RX.H"
 
@@ -69,9 +69,9 @@ extern signed   char 		RFcount;		// Timer counter
 extern unsigned char 	Bptr;		// Receive buffer pointer
 extern unsigned char 	BitCount;		// Received bits counter
 extern unsigned int 		XTMR;		// 16 bit extended timer
-extern volatile bit     		RFsynch;		// High level detect prior to synch pulse
-extern volatile bit 		RFFull;     	// Buffer full
-extern volatile bit 		RFBit;		// Sampled RF signal
+extern bit     	RFsynch;				// High level detect prior to synch pulse
+extern bit 		RFFull;     			// Buffer full
+extern bit 		RFBit;				// Sampled RF signal
 extern unsigned char		RFtype;		// Determines what type of encrypted signal
 									// was received
 
