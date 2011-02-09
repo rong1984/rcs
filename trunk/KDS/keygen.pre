@@ -1,5 +1,5 @@
 
-# 1 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\keygen.c"
+# 1 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keygen.c"
 
 # 4 "C:\Program Files\HI-TECH Software\PICC\9.80\include\string.h"
 typedef int ptrdiff_t;
@@ -41,22 +41,22 @@ extern char * strichr(const char *, int);
 extern char * strrchr(const char *, int);
 extern char * strrichr(const char *, int);
 
-# 56 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\Global.h"
+# 26 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\global.h"
 extern unsigned char Buffer[];
 extern unsigned char DKEY[];
 
-# 36 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\KeyGen.h"
+# 36 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keygen.h"
 void LoadManufCode(void);
 void NormalKeyGen(void);
 unsigned char DecCHK(void);
 unsigned char ReqResync(void);
 unsigned char HopCHK(void);
 
-# 36 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\KeeLoqAlg.h"
+# 36 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keeloq_alg.h"
 void Decrypt(void);
 void Key_Alg(void);
 
-# 44 "I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\keygen.c"
+# 44 "C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keygen.c"
 extern unsigned char SEED[];
 extern unsigned int NextHop;
 extern unsigned char COut;
@@ -148,8 +148,6 @@ return 0;
 # 179
 unsigned char HopCHK(void)
 {
-volatile signed int COUNTCHECK;
-
 FHopOK = 0;
 FSame = 0;
 
@@ -169,12 +167,15 @@ if ( EHop != ETemp)
 return ReqResync();
 
 
-COUNTCHECK = Hop - EHop;
+ETemp = Hop - EHop;
 
-if ( COUNTCHECK < 0)
+if ( ETemp < 0)
 return 0;
 
-else if (COUNTCHECK <= 16)
+else if ( ETemp > 16)
+return ReqResync();
+
+else
 {
 if ( ETemp == 0)
 FSame = 1;
@@ -182,11 +183,5 @@ FSame = 1;
 FHopOK = 1;
 return 1;
 }
-
-else if (COUNTCHECK < 1000)
-return ReqResync();
-
-else
-return 0;
 }
 

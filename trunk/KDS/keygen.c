@@ -2,7 +2,7 @@
 //							 Software License Agreement
 //
 // The software supplied herewith by Microchip Technology Incorporated 
-// (the "Company") for its PICmicro® Microcontroller is intended and 
+// (the "Company") for its PICmicro?Microcontroller is intended and 
 // supplied to you, the Company’s customer, for use solely and 
 // exclusively on Microchip PICmicro Microcontroller products. The 
 // software is owned by the Company and/or its supplier, and is 
@@ -34,9 +34,9 @@
 //=========================================================================
 
 #include "string.h"
-#include "Global.h"
-#include "KeyGen.h"
-#include "KeeLoqAlg.h"
+#include "global.h"
+#include "keygen.h"
+#include "keeloq_alg.h"
 
 //--------------------------------------------------------------------
 // External Variable Definitions
@@ -178,8 +178,6 @@ unsigned char ReqResync(void)
 //----------------------------------------------------------------------
 unsigned char HopCHK(void)
 {
-    volatile signed int 	COUNTCHECK;
-
     FHopOK = FALSE;             // Hopping Code is not verified yet
     FSame = FALSE;              // Hopping Code is not the same as previous
 
@@ -199,25 +197,22 @@ unsigned char HopCHK(void)
         return ReqResync();         // memory corrupted need a resync
     
     // main comparison
-    COUNTCHECK = Hop - EHop;           // subtract last value from new one
+    ETemp = Hop - EHop;             // subtract last value from new one
 
-    if ( COUNTCHECK < 0)                 	// locked region
-        return FALSE;               		// fail
+    if ( ETemp < 0)                 // locked region
+        return FALSE;               // fail
 
-    else if (COUNTCHECK <= 16)		// 0>= ETemp >16 ; open window
-    {
-        if ( ETemp == 0)            		// same code (ETemp == 0)
-           	FSame = TRUE;           		// rise a flag
-
-        	FHopOK = TRUE;           
-        return TRUE;
-    }	
-
-    else if (COUNTCHECK < 1000)         // resync region
+    else if ( ETemp > 16)           // resync region
         return ReqResync();
 
-    else                            
-	return FALSE; 
+    else                            // 0>= ETemp >16 ; open window
+    {
+        if ( ETemp == 0)            // same code (ETemp == 0)
+            FSame = TRUE;           // rise a flag
+
+        FHopOK = TRUE;           
+        return TRUE;
+    }
 } 
 
 //----------------------------------------------------------------------

@@ -2,7 +2,7 @@
 //							 Software License Agreement
 //
 // The software supplied herewith by Microchip Technology Incorporated 
-// (the "Company") for its PICmicro® Microcontroller is intended and 
+// (the "Company") for its PICmicro?Microcontroller is intended and 
 // supplied to you, the Company’s customer, for use solely and 
 // exclusively on Microchip PICmicro Microcontroller products. The 
 // software is owned by the Company and/or its supplier, and is 
@@ -86,6 +86,7 @@ bank1 extern unsigned int ETemp;		// second copy of sync counter
 //--------------------------------------------------------------------
 // EERead ()
 //--------------------------------------------------------------------
+/*
 unsigned char EERead(unsigned char EE_Adress)
 {
 	unsigned char EE_Data;
@@ -95,10 +96,11 @@ unsigned char EERead(unsigned char EE_Adress)
 	EE_Data = EEDAT;	
 	return EE_Data;
 }
-
+*/
 //--------------------------------------------------------------------
 // EEWrite ()
 //--------------------------------------------------------------------
+/*
 unsigned char EEWrite(unsigned char EE_Adress, unsigned char EE_Data)
 {
 	EEPGD = 0;			// Set to write EEPROM area
@@ -115,14 +117,17 @@ unsigned char EEWrite(unsigned char EE_Adress, unsigned char EE_Data)
 	while(WR);			// Wait for EEPROM write to complete
 	return TRUE;
 }
+*/
 
 //--------------------------------------------------------------------
 // RDWord ()
 //--------------------------------------------------------------------
 void RDword(unsigned int Ind)
 {
-    Dato = EERead(Ind);
-    Dato += (unsigned int) EERead( Ind+1) <<8;
+//    Dato = EERead(Ind);
+//    Dato += (unsigned int) EERead( Ind+1) <<8;
+    Dato = eeprom_read(Ind);
+    Dato += (unsigned int) eeprom_read(Ind+1) <<8;
 }
 
 //--------------------------------------------------------------------
@@ -142,9 +147,11 @@ void RDnext(void)
 //--------------------------------------------------------------------
 void WRword(unsigned int Ind)
 {
-    EEWrite( Ind, Dato); 
+//    EEWrite( Ind, Dato);
+	eeprom_write(Ind, Dato); 
 	GIE = 1; // write and re-enable interrupt
-    EEWrite( Ind+1, Dato>>8); 
+//    EEWrite( Ind+1, Dato>>8);
+	eeprom_write(Ind+1, Dato>>8); 
 	GIE = 1; 
 }
 
@@ -290,7 +297,7 @@ unsigned char HopUpdate(void)
 //--------------------------------------------------------------------
 unsigned char ClearMem(void)
 {
-    char i;
+//    char i;
     for (Ind=0; Ind < (EL_SIZE * MAX_USER); Ind+=EL_SIZE)
     {
         Dato = 0xffff;

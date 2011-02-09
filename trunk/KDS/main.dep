@@ -1,18 +1,11 @@
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\KeyGen.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\eusart.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\KeeLoq_HW.h
-C:\Program Files\HI-TECH Software\PICC\9.80\include\stdarg.h
-C:\Program Files\HI-TECH Software\PICC\9.80\include\stdio.h
-C:\Program Files\HI-TECH Software\PICC\9.80\include\conio.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\delay.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\KeeLoq_RX.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\Global.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\Table.h
+C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keeloq_alg.h
+C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\delay.h
+C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\global.h
+C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keeloq_rx.h
 C:\Program Files\HI-TECH Software\PICC\9.80\include\htc.h
 C:\Program Files\HI-TECH Software\PICC\9.80\include\eeprom_routines.h
 C:\Program Files\HI-TECH Software\PICC\9.80\include\string.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\i2c.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\lcd.h
+C:\Program Files\HI-TECH Software\PICC\9.80\include\pic16f636.h
+C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\table.h
 C:\Program Files\HI-TECH Software\PICC\9.80\include\pic.h
-I:\remotecontrol\AN1248 PICmicro MCU Keeloq Receiver with UART interface\SourceCode\KeeLoqAlg.h
-C:\Program Files\HI-TECH Software\PICC\9.80\include\pic16f887.h
+C:\Users\xxxx\Desktop\20110127\RCS\KDS\KDS\keygen.h
