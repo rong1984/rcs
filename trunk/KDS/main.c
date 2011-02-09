@@ -178,6 +178,7 @@ void remote(void)
         case KEELOQ:                    // Standard Keeloq frame detected
             NormalKeyGen();                       // Compute the decryption key 
             Decrypt();                                  // Decrypt the hopping code portion
+/*
 			switch(Buffer[3]&0xF0)
 			{
 				case 0x10://S1
@@ -202,6 +203,7 @@ void remote(void)
 					stop();
 				break;
 			}
+*/
         break;
 
         case AES:                    // AES frame detected
@@ -261,9 +263,34 @@ void remote(void)
             }
             else                                            // hopping code incrementing properly
             {
+			switch(Buffer[3]&0xF0)
+			{
+				case 0x10://S1
+					up();
+				break;
+
+				case 0x20://S2
+					for(k=0;k<3;k++)
+					{
+						RC4 = ON;
+						delay_ms(100);
+						RC4 = OFF;
+						delay_ms(100);
+					}
+				break;
+
+				case 0x40://S3
+					down();
+				break;
+
+				case 0x80: 
+					stop();
+				break;
+			}
+
                 HopUpdate();                           // update memory
                 //LED_LEARN = ON;                //Set an Output. Note: thsi can be set according to function code
-                set_learn_led(ON);
+                //set_learn_led(ON);
 				if(((Buffer[7] ^ FCode) & 0xf0) == 0)    // check against learned function code
                     LED_SIG = ON;
                 COut = TOUT;                   // Init LED output timer
