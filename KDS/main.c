@@ -270,13 +270,7 @@ void remote(void)
 				break;
 
 				case 0x20://S2
-					for(k=0;k<3;k++)
-					{
-						RC4 = ON;
-						delay_ms(100);
-						RC4 = OFF;
-						delay_ms(100);
-					}
+					stop();
 				break;
 
 				case 0x40://S3
